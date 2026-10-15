@@ -25,7 +25,6 @@ permissions:
 jobs:
   resolve:
     name: Resolve preview branch
-    if: github.repository == 'CherryHQ/cherry-studio'
     runs-on: ubuntu-latest
     outputs:
       asset_sha: ${{ steps.source.outputs.asset_sha }}
