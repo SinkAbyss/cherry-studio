@@ -11,7 +11,7 @@ on:
       platform:
         description: "Build platform"
         required: true
-        default: "all"
+        default: "windows"
         type: choice
         options:
           - all
@@ -56,13 +56,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        edition: [global, cn]
+        edition: [global]
         os: ${{ fromJSON(
-          inputs.platform == 'all' && '["macos-latest", "windows-latest", "ubuntu-latest"]' ||
+          inputs.platform == 'all' && '["macos-latest", "windows-2022", "ubuntu-latest"]' ||
           inputs.platform == 'linux' && '["ubuntu-latest"]' ||
-          inputs.platform == 'windows' && '["windows-latest"]' ||
+          inputs.platform == 'windows' && '["windows-2022"]' ||
           inputs.platform == 'mac' && '["macos-latest"]' ||
-          '["macos-latest", "windows-latest", "ubuntu-latest"]'
+          '["macos-latest", "windows-2022", "ubuntu-latest"]'
           ) }}
 
     steps:
@@ -117,7 +117,7 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=8192
           MAIN_VITE_CHERRY_CLOUD_CLIENT_SECRET: ${{ secrets.MAIN_VITE_CHERRY_CLOUD_CLIENT_SECRET }}
-          SENTRY_SOURCE_MAP_UPLOAD: "true"
+          SENTRY_SOURCE_MAP_UPLOAD: "false"
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -136,7 +136,7 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           NODE_OPTIONS: --max-old-space-size=8192
           MAIN_VITE_CHERRY_CLOUD_CLIENT_SECRET: ${{ secrets.MAIN_VITE_CHERRY_CLOUD_CLIENT_SECRET }}
-          SENTRY_SOURCE_MAP_UPLOAD: "true"
+          SENTRY_SOURCE_MAP_UPLOAD: "false"
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
@@ -146,7 +146,7 @@ jobs:
           RENDERER_VITE_PPIO_APP_SECRET: ${{ secrets.RENDERER_VITE_PPIO_APP_SECRET }}
 
       - name: Build Windows
-        if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-2022'
         run: pnpm ${{ matrix.edition == 'cn' && 'build:win:cn' || 'build:win' }} --publish never
         env:
           ELECTRON_BUILDER_7Z_FILTER: BCJ
